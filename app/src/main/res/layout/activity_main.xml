@@ -10,7 +10,13 @@
     tools:context="com.griffith.horiot.assignment3.MainActivity">
 
     <com.griffith.horiot.assignment3.GPSTrackerView
-        android:id="@+id/mine_sweeper_view"
+        android:id="@+id/gps_tracker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/tracker_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tracker_off" />
 </RelativeLayout>
