@@ -15,17 +15,18 @@ import java.util.List;
 /**
  * Created by horiot_b on 25/04/2016 for Code and Learn
  */
+
 public class GPSTrackerView extends View {
 
     private Context context;
     private LocationManager lm;
     private List<Location> locationList;
+    private MyLocationListener listener;
 
     private void init(Context context) {
         this.context = context;
-        this.lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         this.locationList = new ArrayList<>();
-        this.addLocationListener();
+        this.listener = new MyLocationListener();
     }
 
     public GPSTrackerView(Context context) {
@@ -43,47 +44,66 @@ public class GPSTrackerView extends View {
         this.init(context);
     }
 
-    // private method that will add a location listener to the location manager
-    public void addLocationListener() {
-
+    public void startGPS() {
         if (this.context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
+            this.lm = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
+            this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, this.listener);
+        }
+    }
 
-            this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 5, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    // the location of the device has changed so update the textviews to reflect this
+    public void stopGPS() {
+        if (this.context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
+            this.lm.removeUpdates(listener);
+            this.lm = null;
+        }
+    }
+
+    public List<Location> getLocationList() {
+        return this.locationList;
+    }
+
+    public LocationManager getLocationManager() {
+        return this.lm;
+    }
+
+    private class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            // the location of the device has changed so update the textviews to reflect this
                     /*tv_lat.setText("Latitude: " + location.getLatitude());
                     tv_long.setText("Longitude: " + location.getLongitude());*/
-                    locationList.add(location);
-                    if (locationList.size() == 101) locationList.remove(locationList.get(0));
-                }
+            locationList.add(location);
+            if (locationList.size() == 101) locationList.remove(locationList.get(0));
+            ((MainActivity) context).updateList();
+        }
 
-                @Override
-                public void onProviderDisabled(String provider) {
-                    // if GPS has been disabled then update the textviews to reflect this
+        @Override
+        public void onProviderDisabled(String provider) {
+            // if GPS has been disabled then update the textviews to reflect this
                     /*if (provider == LocationManager.GPS_PROVIDER) {
                         tv_lat.setText(R.string.tv_lat_text);
                         tv_long.setText(R.string.tv_long_text);
                     }*/
-                }
+        }
 
-                @Override
-                public void onProviderEnabled(String provider) {
-                    // if there is a last known location then set it on the textviews
-                    if (provider == LocationManager.GPS_PROVIDER &&
-                            context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
-                        Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if (l != null) {
-                            locationList.add(l);
-                            if (locationList.size() == 101) locationList.remove(locationList.get(0));
-                        }
-                    }
+        @Override
+        public void onProviderEnabled(String provider) {
+            // if there is a last known location then set it on the textviews
+            if (provider.equals(LocationManager.GPS_PROVIDER) &&
+                    context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
+                Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (l != null) {
+                    locationList.add(l);
+                    if (locationList.size() == 101)
+                        locationList.remove(locationList.get(0));
+                    ((MainActivity) context).updateList();
                 }
+            }
+        }
 
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                }
-            });
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     }
 }
