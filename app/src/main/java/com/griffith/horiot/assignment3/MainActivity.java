@@ -1,5 +1,6 @@
 package com.griffith.horiot.assignment3;
 
+import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,5 +22,11 @@ public class MainActivity extends AppCompatActivity {
                 else button.setText(getResources().getString(R.string.tracker_off));
             }
         });
+
+    }
+
+    public void location() {
+        LocationManager lm = new LocationManager();
+
     }
 }
