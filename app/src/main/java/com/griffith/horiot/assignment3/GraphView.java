@@ -10,27 +10,34 @@ import android.view.View;
 
 import java.util.List;
 
-/**
- * Created by horiot_b on 25/04/2016 for Code and Learn
- */
 public class GraphView extends View {
 
-    private Paint blue, red;
+    private Paint blue, red, yellow;
     private int size;
     private List<Location> locationList;
+    private int timeCounter;
+    private double currentSpeed;
+    private double avgSpeed;
 
     private void init() {
         this.blue = new Paint();
         this.red = new Paint();
+        this.yellow = new Paint();
 
         this.blue.setColor(ContextCompat.getColor(getContext(), R.color.blue));
         this.red.setColor(ContextCompat.getColor(getContext(), R.color.red));
+        this.yellow.setColor(ContextCompat.getColor(getContext(), R.color.yellow));
 
         this.blue.setStyle(Paint.Style.STROKE);
         this.blue.setStrokeWidth(3);
 
         this.red.setStyle(Paint.Style.STROKE);
         this.red.setStrokeWidth(4);
+
+        this.yellow.setStyle(Paint.Style.STROKE);
+        this.yellow.setStrokeWidth(3);
+
+        this.timeCounter = 0;
     }
 
     public GraphView(Context context) {
@@ -56,10 +63,12 @@ public class GraphView extends View {
         }
         canvas.save();
         canvas.drawLine(0, this.size - 1, this.size, this.size - 1, this.blue);
+        canvas.restore();
 
         if (this.locationList != null) {
             int i = 0;
             double prevSpeed = 0;
+            double sumSpeed = 0;
 
             for (Location l : this.locationList) {
                 double realSpeed = l.getSpeed() * 3.6;
@@ -78,8 +87,16 @@ public class GraphView extends View {
                 }
 
                 prevSpeed = realSpeed;
+                this.currentSpeed = realSpeed;
+                sumSpeed += realSpeed;
                 i++;
             }
+
+            this.avgSpeed = sumSpeed / this.locationList.size();
+
+            canvas.save();
+            canvas.drawLine(0, (float)(this.size - (this.avgSpeed * (this.size / 60))), this.size, (float)(this.size - (this.avgSpeed * (this.size / 60))), this.yellow);
+            canvas.restore();
         }
 
         super.onDraw(canvas);
@@ -98,5 +115,18 @@ public class GraphView extends View {
     public void updateLocationList(List<Location> locationList) {
         this.locationList = locationList;
         this.invalidate();
+        this.timeCounter++;
+    }
+
+    public int getTimeCounter() {
+        return this.timeCounter;
+    }
+
+    public Double getCurrentSpeed() {
+        return this.currentSpeed;
+    }
+
+    public Double getAvgSpeed() {
+        return this.avgSpeed;
     }
 }

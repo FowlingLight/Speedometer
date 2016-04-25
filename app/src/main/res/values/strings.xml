@@ -3,4 +3,13 @@
 
     <string name="tracker_off">Enable GPS Tracking</string>
     <string name="tracker_on">Disable GPS Tracking</string>
+
+    <string name="current_time">Overall time :</string>
+    <string name="current_speed">Current speed :</string>
+    <string name="average_speed">Average speed :</string>
+
+    <string name="km_h">km/h</string>
+    <string name="na">N/A</string>
+
+
 </resources>
