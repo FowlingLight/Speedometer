@@ -25,6 +25,7 @@ public class GPSTrackerView extends View {
         this.context = context;
         this.lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         this.locationList = new ArrayList<>();
+        this.addLocationListener();
     }
 
     public GPSTrackerView(Context context) {
@@ -54,7 +55,7 @@ public class GPSTrackerView extends View {
                     /*tv_lat.setText("Latitude: " + location.getLatitude());
                     tv_long.setText("Longitude: " + location.getLongitude());*/
                     locationList.add(location);
-                    if (locationList.size() == 101) locationList.remove(locationList.get(0);
+                    if (locationList.size() == 101) locationList.remove(locationList.get(0));
                 }
 
                 @Override
@@ -74,7 +75,7 @@ public class GPSTrackerView extends View {
                         Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         if (l != null) {
                             locationList.add(l);
-                            if (locationList.size() == 101) locationList.remove(locationList.get(0);
+                            if (locationList.size() == 101) locationList.remove(locationList.get(0));
                         }
                     }
                 }
@@ -85,6 +86,4 @@ public class GPSTrackerView extends View {
             });
         }
     }
-
-
 }

@@ -24,9 +24,4 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-    public void location() {
-        LocationManager lm = new LocationManager();
-
-    }
 }
