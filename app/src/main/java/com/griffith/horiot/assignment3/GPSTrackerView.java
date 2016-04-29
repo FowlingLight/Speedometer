@@ -43,7 +43,7 @@ public class GPSTrackerView extends View {
     public void startGPS() {
         if (this.context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
             this.lm = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
-            this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0.1f, this.listener);
+            this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this.listener);
         }
     }
 
