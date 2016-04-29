@@ -11,5 +11,7 @@
     <string name="km_h">km/h</string>
     <string name="na">N/A</string>
 
+    <string name="nbr_points_graph">100</string>
+
 
 </resources>

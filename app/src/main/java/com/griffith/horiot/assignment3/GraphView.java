@@ -70,32 +70,41 @@ public class GraphView extends View {
             double prevSpeed = 0;
             double sumSpeed = 0;
 
-            for (Location l : this.locationList) {
-                double realSpeed = l.getSpeed() * 3.6;
+            if (Integer.valueOf(getResources().getString(R.string.nbr_points_graph)) > 0)
+                for (int j = 0; j < this.locationList.size(); j++) {
+                    if (Integer.valueOf(getResources().getString(R.string.nbr_points_graph)) < 100)
+                        while (j < this.locationList.size() - Integer.valueOf(getResources().getString(R.string.nbr_points_graph)) - 1)
+                            sumSpeed += this.locationList.get(j++).getSpeed();
 
-                if (realSpeed > 60) {
-                    realSpeed = 60;
-                }
-                if (realSpeed < 0) {
-                    realSpeed = 0;
-                }
+                    Location l = this.locationList.get(j);
+                    double realSpeed = l.getSpeed() * 3.6;
 
-                if (i != 0) {
-                    canvas.save();
-                    canvas.drawLine((i - 1) * this.size / 99, (float)(this.size - (prevSpeed * this.size / 60)), i * this.size / 99, (float)(this.size - (realSpeed * this.size / 60)), this.red);
-                    canvas.restore();
-                }
+                    if (realSpeed > 60) {
+                        realSpeed = 60;
+                    }
+                    if (realSpeed < 0) {
+                        realSpeed = 0;
+                    }
 
-                prevSpeed = realSpeed;
-                this.currentSpeed = realSpeed;
-                sumSpeed += realSpeed;
-                i++;
-            }
+                    if (i != 0) {
+                        canvas.save();
+                        canvas.drawLine((i - 1) * this.size / Integer.valueOf(getResources().getString(R.string.nbr_points_graph)) - 1,
+                                (float) (this.size - (prevSpeed * this.size / 60)),
+                                i * this.size / Integer.valueOf(getResources().getString(R.string.nbr_points_graph)) - 1,
+                                (float) (this.size - (realSpeed * this.size / 60)), this.red);
+                        canvas.restore();
+                    }
+
+                    prevSpeed = realSpeed;
+                    this.currentSpeed = realSpeed;
+                    sumSpeed += realSpeed;
+                    i++;
+                }
 
             this.avgSpeed = sumSpeed / this.locationList.size();
 
             canvas.save();
-            canvas.drawLine(0, (float)(this.size - (this.avgSpeed * (this.size / 60))), this.size, (float)(this.size - (this.avgSpeed * (this.size / 60))), this.yellow);
+            canvas.drawLine(0, (float) (this.size - (this.avgSpeed * (this.size / 60))), this.size, (float) (this.size - (this.avgSpeed * (this.size / 60))), this.yellow);
             canvas.restore();
         }
 
